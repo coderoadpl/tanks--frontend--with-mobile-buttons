@@ -1,0 +1,88 @@
+import React from 'react'
+import PropTypes from 'prop-types'
+
+import { Box, Card, Button, TextField, Typography } from '@mui/material'
+
+export const WelcomeScreen = (props) => {
+  const {
+    errorMessage,
+    onJoinClick,
+    onNewGameClick
+  } = props
+
+  const [gameId, setGameId] = React.useState('')
+
+  return (
+    <Box
+      sx={{
+        width: '100vw',
+        height: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}
+    >
+      <Card
+        sx={{
+          width: 320,
+          padding: 2,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        {
+          errorMessage ?
+            <Typography
+              sx={{
+                marginBottom: 2
+              }}
+              color={'error'}
+            >
+              {errorMessage}
+            </Typography>
+            :
+            null
+        }
+        <TextField
+          sx={{
+            width: '100%',
+            marginBottom: 2
+          }}
+          label={'Game ID'}
+          size={'small'}
+          value={gameId}
+          onChange={(e) => setGameId(e.target.value)}
+        />
+        <Button
+          sx={{
+            width: '100%',
+            marginBottom: 2
+          }}
+          variant={'contained'}
+          onClick={() => onJoinClick(gameId)}
+        >
+          JOIN
+        </Button>
+        <Button
+          sx={{
+            width: '100%'
+          }}
+          variant={'contained'}
+          onClick={onNewGameClick}
+        >
+          NEW GAME
+        </Button>
+      </Card>
+    </Box>
+  )
+}
+
+WelcomeScreen.propTypes = {
+  errorMessage: PropTypes.string,
+  onJoinClick: PropTypes.func.isRequired,
+  onNewGameClick: PropTypes.func.isRequired
+}
+
+export default WelcomeScreen
