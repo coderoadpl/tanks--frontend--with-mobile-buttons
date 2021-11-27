@@ -8,8 +8,11 @@ const socket = io(process.env.REACT_APP_SOCKET_URL, { secure: true, autoConnect:
 
 export const App = () => {
   const connectionIdRef = React.useRef(null)
+  const [board, setBoard] = React.useState(null)
   const [gameId, setGameId] = React.useState(null)
   const [errorMessage, setErrorMessage] = React.useState(null)
+
+  console.log('board', board)
 
   const onJoinClick = React.useCallback(async (gameId) => {
     setErrorMessage(null)
@@ -46,6 +49,8 @@ export const App = () => {
       connectionIdRef.current = connectionId
     })
 
+    socket.on('BOARD_CHANGED', setBoard)
+
     return () => socket.disconnect()
   }, [])
 
@@ -53,6 +58,7 @@ export const App = () => {
     gameId !== null ?
       <GameScreen
         gameId={gameId}
+        board={board}
       />
       :
       <WelcomeScreen
