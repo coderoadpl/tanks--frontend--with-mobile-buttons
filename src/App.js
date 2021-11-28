@@ -3,16 +3,16 @@ import { io } from 'socket.io-client'
 
 import GameScreen from './components/GameScreen'
 import WelcomeScreen from './components/WelcomeScreen'
+import GameEndedOverlay from './components/GameEndedOverlay'
 
 const socket = io(process.env.REACT_APP_SOCKET_URL, { secure: true, autoConnect: false })
 
 export const App = () => {
   const connectionIdRef = React.useRef(null)
   const [board, setBoard] = React.useState(null)
+  const [gameEnded, setGameEnded] = React.useState(false)
   const [gameId, setGameId] = React.useState(null)
   const [errorMessage, setErrorMessage] = React.useState(null)
-
-  console.log('board', board)
 
   const onJoinClick = React.useCallback(async (gameId) => {
     setErrorMessage(null)
@@ -40,6 +40,16 @@ export const App = () => {
     setGameId(data.gameId)
   }, [])
 
+  const sendEvent = React.useCallback(async ({ key, eventName }) => {
+    socket.emit('PLAYER_ACTION', { key, eventName })
+  }, [])
+
+  const onReplayClick = React.useCallback(async () => {
+    setGameEnded(false)
+    setGameId(null)
+    setBoard(null)
+  }, [])
+
   React.useEffect(() => {
     socket.connect()
 
@@ -50,22 +60,36 @@ export const App = () => {
     })
 
     socket.on('BOARD_CHANGED', setBoard)
+    socket.on('GAME_ENDED', () => setGameEnded(true))
 
     return () => socket.disconnect()
   }, [])
 
   return (
-    gameId !== null ?
-      <GameScreen
-        gameId={gameId}
-        board={board}
-      />
-      :
-      <WelcomeScreen
-        errorMessage={errorMessage}
-        onJoinClick={onJoinClick}
-        onNewGameClick={onNewGameClick}
-      />
+    <>
+      {
+        gameId !== null ?
+          <GameScreen
+            gameId={gameId}
+            board={board}
+            sendEvent={sendEvent}
+          />
+          :
+          <WelcomeScreen
+            errorMessage={errorMessage}
+            onJoinClick={onJoinClick}
+            onNewGameClick={onNewGameClick}
+          />
+      }
+      {
+        gameEnded ?
+          <GameEndedOverlay
+            onReplayClick={onReplayClick}
+          />
+          :
+          null
+      }
+    </>
   )
 }
 

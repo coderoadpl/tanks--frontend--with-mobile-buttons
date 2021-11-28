@@ -4,7 +4,60 @@ import PropTypes from 'prop-types'
 import { Box } from '@mui/material'
 
 export const GameScreen = (props) => {
-  const { gameId, board } = props
+  const { gameId, board, sendEvent } = props
+
+  React.useEffect(() => {
+    const keydownListener = (e) => {
+      switch (e.key) {
+        case 'ArrowDown':
+          sendEvent({ key: 'ArrowDown', eventName: 'keydown' })
+          break
+        case 'ArrowUp':
+          sendEvent({ key: 'ArrowUp', eventName: 'keydown' })
+          break
+        case 'ArrowLeft':
+          sendEvent({ key: 'ArrowLeft', eventName: 'keydown' })
+          break
+        case 'ArrowRight':
+          sendEvent({ key: 'ArrowRight', eventName: 'keydown' })
+          break
+        case ' ':
+          sendEvent({ key: 'Space', eventName: 'keydown' })
+          break
+        default:
+      }
+    }
+    const keyupListener = (e) => {
+      console.log(e.key)
+      switch (e.key) {
+        case 'ArrowDown':
+          sendEvent({ key: 'ArrowDown', eventName: 'keyup' })
+          break
+        case 'ArrowUp':
+          sendEvent({ key: 'ArrowUp', eventName: 'keyup' })
+          break
+        case 'ArrowLeft':
+          sendEvent({ key: 'ArrowLeft', eventName: 'keyup' })
+          break
+        case 'ArrowRight':
+          sendEvent({ key: 'ArrowRight', eventName: 'keyup' })
+          break
+        case ' ':
+          sendEvent({ key: 'Space', eventName: 'keyup' })
+          break
+        default:
+      }
+    }
+
+    window.addEventListener('keydown', keydownListener)
+    window.addEventListener('keyup', keyupListener)
+
+    return () => {
+      window.removeEventListener('keydown', keydownListener)
+      window.removeEventListener('keyup', keyupListener)
+    }
+  }, [sendEvent])
+
   return (
     <Box
       sx={{
@@ -22,7 +75,7 @@ export const GameScreen = (props) => {
           left: 0
         }}
       >
-        GAME ID: {gameId}
+        GAME ID: {gameId} | TIME: {(board.time / 1000).toFixed(2)} / {(board.endTime / 1000).toFixed(2)}
       </Box>
       <Box
         sx={{
@@ -43,10 +96,22 @@ export const GameScreen = (props) => {
                   left: object.left,
                   width: object.width,
                   height: object.height,
-                  transform: 'rotate(' + object.rotation + ')deg',
-                  backgroundColor: 'black'
+                  transform: 'rotate(' + object.rotation + 'deg)',
+                  backgroundColor: object.hp === 0 ? 'red' : 'black'
                 }}
               >
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: '50%',
+                    width: 5,
+                    height: 5,
+                    transform: 'translateX(-50%)',
+                    backgroundColor: object.isFiring ? 'red' : 'yellow'
+                  }}
+                >
+                </Box>
               </Box>
             )
           })
@@ -72,6 +137,8 @@ export const PropTypeBoard = PropTypes.shape({
     x: PropTypes.number.isRequired,
     y: PropTypes.number.isRequired
   }).isRequired,
+  time: PropTypes.number.isRequired,
+  endTime: PropTypes.number.isRequired,
   objects: PropTypes.arrayOf(PropTypes.oneOfType([
     PropTypePlayer
   ])).isRequired
@@ -79,7 +146,8 @@ export const PropTypeBoard = PropTypes.shape({
 
 GameScreen.propTypes = {
   board: PropTypeBoard,
-  gameId: PropTypes.number.isRequired
+  gameId: PropTypes.number.isRequired,
+  sendEvent: PropTypes.func.isRequired
 }
 
 export default GameScreen
