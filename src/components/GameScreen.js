@@ -3,10 +3,15 @@ import PropTypes from 'prop-types'
 
 import { Box } from '@mui/material'
 
+import tankImage from '../images/tank.png'
+import tankFiringImage from '../images/tank--firing.png'
+import tankDestroyedImage from '../images/tank--destroyed.png'
+
 export const GameScreen = (props) => {
   const { gameId, board, sendEvent } = props
 
   React.useEffect(() => {
+    console.log('listeners')
     const keydownListener = (e) => {
       switch (e.key) {
         case 'ArrowDown':
@@ -27,8 +32,8 @@ export const GameScreen = (props) => {
         default:
       }
     }
+
     const keyupListener = (e) => {
-      console.log(e.key)
       switch (e.key) {
         case 'ArrowDown':
           sendEvent({ key: 'ArrowDown', eventName: 'keyup' })
@@ -87,6 +92,8 @@ export const GameScreen = (props) => {
       >
         {
           board && board.objects && board.objects.map((object) => {
+            const image = object.hp <= 0 ? tankDestroyedImage : object.isFiring ? tankFiringImage : tankImage
+
             return (
               <Box
                 key={object.id}
@@ -97,22 +104,12 @@ export const GameScreen = (props) => {
                   width: object.width,
                   height: object.height,
                   transform: 'rotate(' + object.rotation + 'deg)',
-                  backgroundColor: object.hp === 0 ? 'red' : 'black'
+                  backgroundColor: object.hp === 0 ? 'red' : 'black',
+                  backgroundPosition: 'cover',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundImage: 'url(' + image + ')'
                 }}
-              >
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    top: 0,
-                    left: '50%',
-                    width: 5,
-                    height: 5,
-                    transform: 'translateX(-50%)',
-                    backgroundColor: object.isFiring ? 'red' : 'yellow'
-                  }}
-                >
-                </Box>
-              </Box>
+              />
             )
           })
         }

@@ -41,6 +41,7 @@ export const App = () => {
   }, [])
 
   const sendEvent = React.useCallback(async ({ key, eventName }) => {
+    console.log('emit', key, eventName, socket)
     socket.emit('PLAYER_ACTION', { key, eventName })
   }, [])
 
