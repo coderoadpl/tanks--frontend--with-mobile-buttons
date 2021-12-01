@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { Box } from '@mui/material'
+import { Box, Button, Stack } from '@mui/material'
 
 import tankImage from '../images/tank.png'
 import tankFiringImage from '../images/tank--firing.png'
@@ -9,6 +9,8 @@ import tankDestroyedImage from '../images/tank--destroyed.png'
 
 export const GameScreen = (props) => {
   const { gameId, board, sendEvent } = props
+
+  const scale = window.innerWidth < board.dimensions.x ? window.innerWidth / board.dimensions.x : 1
 
   React.useEffect(() => {
     console.log('listeners')
@@ -73,24 +75,27 @@ export const GameScreen = (props) => {
         alignItems: 'center'
       }}
     >
-      <Box
-        sx={{
-          position: 'fixed',
-          top: 0,
-          left: 0
-        }}
+      <Stack
+        sx={{ transform: 'scale(' + scale + ')' }}
       >
-        GAME ID: {gameId} | TIME: {(board.time / 1000).toFixed(2)} / {(board.endTime / 1000).toFixed(2)}
-      </Box>
-      <Box
-        sx={{
-          width: board.dimensions.x,
-          height: board.dimensions.y,
-          backgroundColor: 'green',
-          position: 'relative'
-        }}
-      >
-        {
+        <Box
+          sx={{
+            position: 'fixed',
+            top: 0,
+            left: 0
+          }}
+        >
+          GAME ID: {gameId} | TIME: {(board.time / 1000).toFixed(2)} / {(board.endTime / 1000).toFixed(2)}
+        </Box>
+        <Box
+          sx={{
+            width: board.dimensions.x,
+            height: board.dimensions.y,
+            backgroundColor: 'green',
+            position: 'relative'
+          }}
+        >
+          {
           board && board.objects && board.objects.map((object) => {
             const image = object.hp <= 0 ? tankDestroyedImage : object.isFiring ? tankFiringImage : tankImage
 
@@ -114,7 +119,56 @@ export const GameScreen = (props) => {
           })
         }
 
-      </Box>
+        </Box>
+
+        <Stack gap={1}>
+          <Stack
+            direction={'row'}
+            gap={1}
+            sx={{
+              marginTop: 2,
+              width: '100%',
+              justifyContent: 'center'
+            }}
+          >
+            <Button
+              variant={'contained'}
+              onClick={() => sendEvent({ key: 'ArrowLeft', eventName: 'keydown' })}
+            >
+              {'<-'}
+            </Button>
+            <Stack
+              gap={1}
+              sx={{ flexGrow: 1 }}
+            >
+              <Button
+                variant={'contained'}
+                onClick={() => sendEvent({ key: 'ArrowUp', eventName: 'keydown' })}
+              >
+                ⌃
+              </Button>
+              <Button
+                variant={'contained'}
+                onClick={() => sendEvent({ key: 'ArrowDown', eventName: 'keydown' })}
+              >
+                ⌄
+              </Button>
+            </Stack>
+            <Button
+              variant={'contained'}
+              onClick={() => sendEvent({ key: 'ArrowRight', eventName: 'keydown' })}
+            >
+              {'->'}
+            </Button>
+          </Stack>
+          <Button
+            variant={'contained'}
+            onClick={() => sendEvent({ key: 'Space', eventName: 'keyup' })}
+          >
+            FIRE
+          </Button>
+        </Stack>
+      </Stack>
     </Box>
   )
 }
