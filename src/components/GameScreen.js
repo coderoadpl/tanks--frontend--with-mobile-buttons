@@ -75,18 +75,20 @@ export const GameScreen = (props) => {
         alignItems: 'center'
       }}
     >
+      <Box
+        sx={{
+          width: '100%',
+          textAlign: 'center',
+          position: 'fixed',
+          top: 0,
+          left: 0
+        }}
+      >
+        GAME ID: {gameId} | TIME: {(board.time / 1000).toFixed(2)} / {(board.endTime / 1000).toFixed(2)}
+      </Box>
       <Stack
         sx={{ transform: 'scale(' + scale + ')' }}
       >
-        <Box
-          sx={{
-            position: 'fixed',
-            top: 0,
-            left: 0
-          }}
-        >
-          GAME ID: {gameId} | TIME: {(board.time / 1000).toFixed(2)} / {(board.endTime / 1000).toFixed(2)}
-        </Box>
         <Box
           sx={{
             width: board.dimensions.x,
