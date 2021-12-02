@@ -77,12 +77,12 @@ export const GameScreen = (props) => {
       }}
     >
       <Stack
+        gap={2}
         sx={{ transform: 'scale(' + scale + ')' }}
       >
         <Card
           sx={{
             padding: 2,
-            marginBottom: 2,
             textAlign: 'center'
           }}
         >
@@ -94,6 +94,7 @@ export const GameScreen = (props) => {
           </Typography>
           GAME ID: {gameId} | TIME: {(board.time / 1000).toFixed(2)} / {(board.endTime / 1000).toFixed(2)}
         </Card>
+
         <Box
           sx={{
             width: board.dimensions.x,
@@ -129,7 +130,9 @@ export const GameScreen = (props) => {
 
         </Box>
 
-        <Card sx={{ padding: 2 }}>
+        <Card
+          sx={{ padding: 2 }}
+        >
 
           <Stack gap={1}>
             <Stack
