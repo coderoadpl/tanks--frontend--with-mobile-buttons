@@ -32,6 +32,12 @@ export const WelcomeScreen = (props) => {
           alignItems: 'center'
         }}
       >
+        <Typography
+          sx={{ marginBottom: 2 }}
+          variant={'h5'}
+        >
+          🔥 TANKS 🔥
+        </Typography>
         {
           errorMessage ?
             <Typography

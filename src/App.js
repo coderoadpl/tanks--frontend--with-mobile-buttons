@@ -5,6 +5,8 @@ import GameScreen from './components/GameScreen'
 import WelcomeScreen from './components/WelcomeScreen'
 import GameEndedOverlay from './components/GameEndedOverlay'
 
+import { ThemeProvider, createTheme } from '@mui/material'
+
 const socket = io(process.env.REACT_APP_SOCKET_URL, { secure: true, autoConnect: false })
 
 export const App = () => {
@@ -60,6 +62,12 @@ export const App = () => {
       connectionIdRef.current = connectionId
     })
 
+    socket.on('connect_error', () => {
+      setTimeout(() => {
+        socket.connect()
+      }, 100)
+    })
+
     socket.on('BOARD_CHANGED', setBoard)
     socket.on('GAME_ENDED', () => setGameEnded(true))
 
@@ -67,7 +75,7 @@ export const App = () => {
   }, [])
 
   return (
-    <>
+    <ThemeProvider theme={createTheme({ palette: { primary: { main: '#000' } } })}>
       {
         gameId !== null ?
           <GameScreen
@@ -90,7 +98,7 @@ export const App = () => {
           :
           null
       }
-    </>
+    </ThemeProvider>
   )
 }
 

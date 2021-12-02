@@ -1,7 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { Box, Button, Stack } from '@mui/material'
+import { Box, Button, Stack, Typography, Card } from '@mui/material'
+import { KeyboardArrowUp, KeyboardArrowDown, KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material'
 
 import tankImage from '../images/tank.png'
 import tankFiringImage from '../images/tank--firing.png'
@@ -75,26 +76,31 @@ export const GameScreen = (props) => {
         alignItems: 'center'
       }}
     >
-      <Box
-        sx={{
-          width: '100%',
-          textAlign: 'center',
-          position: 'fixed',
-          top: 0,
-          left: 0
-        }}
-      >
-        GAME ID: {gameId} | TIME: {(board.time / 1000).toFixed(2)} / {(board.endTime / 1000).toFixed(2)}
-      </Box>
       <Stack
         sx={{ transform: 'scale(' + scale + ')' }}
       >
+        <Card
+          sx={{
+            padding: 2,
+            marginBottom: 2,
+            textAlign: 'center'
+          }}
+        >
+          <Typography
+            sx={{ marginBottom: 2 }}
+            variant={'h5'}
+          >
+            🔥 TANKS 🔥
+          </Typography>
+          GAME ID: {gameId} | TIME: {(board.time / 1000).toFixed(2)} / {(board.endTime / 1000).toFixed(2)}
+        </Card>
         <Box
           sx={{
             width: board.dimensions.x,
             height: board.dimensions.y,
             backgroundColor: 'green',
-            position: 'relative'
+            position: 'relative',
+            borderRadius: 1
           }}
         >
           {
@@ -123,53 +129,57 @@ export const GameScreen = (props) => {
 
         </Box>
 
-        <Stack gap={1}>
-          <Stack
-            direction={'row'}
-            gap={1}
-            sx={{
-              marginTop: 2,
-              width: '100%',
-              justifyContent: 'center'
-            }}
-          >
-            <Button
-              variant={'contained'}
-              onClick={() => sendEvent({ key: 'ArrowLeft', eventName: 'keydown' })}
-            >
-              {'<-'}
-            </Button>
+        <Card sx={{ padding: 2 }}>
+
+          <Stack gap={1}>
             <Stack
+              direction={'row'}
               gap={1}
-              sx={{ flexGrow: 1 }}
+              sx={{
+                marginTop: 2,
+                width: '100%',
+                justifyContent: 'center'
+              }}
             >
               <Button
-                variant={'contained'}
-                onClick={() => sendEvent({ key: 'ArrowUp', eventName: 'keydown' })}
+                variant={'outlined'}
+                onClick={() => sendEvent({ key: 'ArrowLeft', eventName: 'keydown' })}
               >
-                ⌃
+                <KeyboardArrowLeft />
               </Button>
-              <Button
-                variant={'contained'}
-                onClick={() => sendEvent({ key: 'ArrowDown', eventName: 'keydown' })}
+              <Stack
+                gap={1}
+                sx={{ flexGrow: 1 }}
               >
-                ⌄
+                <Button
+                  variant={'outlined'}
+                  onClick={() => sendEvent({ key: 'ArrowUp', eventName: 'keydown' })}
+                >
+                  <KeyboardArrowUp />
+                </Button>
+                <Button
+                  variant={'outlined'}
+                  onClick={() => sendEvent({ key: 'ArrowDown', eventName: 'keydown' })}
+                >
+                  <KeyboardArrowDown />
+                </Button>
+              </Stack>
+              <Button
+                variant={'outlined'}
+                onClick={() => sendEvent({ key: 'ArrowRight', eventName: 'keydown' })}
+              >
+                <KeyboardArrowRight />
               </Button>
             </Stack>
             <Button
               variant={'contained'}
-              onClick={() => sendEvent({ key: 'ArrowRight', eventName: 'keydown' })}
+              onClick={() => sendEvent({ key: 'Space', eventName: 'keydown' })}
             >
-              {'->'}
+              FIRE
             </Button>
           </Stack>
-          <Button
-            variant={'contained'}
-            onClick={() => sendEvent({ key: 'Space', eventName: 'keydown' })}
-          >
-            FIRE
-          </Button>
-        </Stack>
+
+        </Card>
       </Stack>
     </Box>
   )
