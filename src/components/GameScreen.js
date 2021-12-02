@@ -165,7 +165,7 @@ export const GameScreen = (props) => {
           </Stack>
           <Button
             variant={'contained'}
-            onClick={() => sendEvent({ key: 'Space', eventName: 'keyup' })}
+            onClick={() => sendEvent({ key: 'Space', eventName: 'keydown' })}
           >
             FIRE
           </Button>
